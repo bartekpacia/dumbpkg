@@ -1,0 +1,50 @@
+name: publish
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  publish:
+    name: Publish on pub.dev
+    runs-on: ubuntu-latest
+    outputs:
+      changelog_url: ${{ steps.pub_release.outputs.release_notes }}
+
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      # This action adds a token needed for pub.dev
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ matrix.channel }}
+          flutter-version: ${{ matrix.version }}
+
+      - name: Publish to pub.dev
+        id: pub_release
+        uses: leancodepl/mobile-tools/.github/actions/pub-release@v1
+        with:
+          path: packages/patrol
+          dry-run: true
+
+  print_output:
+    name: Print action results
+    runs-on: ubuntu-latest
+    needs: publish
+
+    steps:
+      - name: Print results
+        run: |
+          echo "changelog_url: ${{ needs.publish.outputs.changelog_url }}"
+          echo "prerelease: ${{ needs.publish.outputs.prerelease }}"
