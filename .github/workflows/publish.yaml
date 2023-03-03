@@ -2,7 +2,7 @@ name: publish
 
 on:
   push:
-    tags: ['v*']
+    tags: ['dumbpkg-v*']
 
 jobs:
   publish:
@@ -35,7 +35,6 @@ jobs:
         id: pub_release
         uses: leancodepl/mobile-tools/.github/actions/pub-release@pub-release-v1
         with:
-          path: packages/patrol
           dry-run: true
 
   print_output:
