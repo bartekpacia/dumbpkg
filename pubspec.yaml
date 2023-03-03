@@ -1,6 +1,6 @@
 name: dumbpkg
 description: A dumb package for testing various CI integrations.
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/bartekpacia/dumbpkg
 
 environment:
