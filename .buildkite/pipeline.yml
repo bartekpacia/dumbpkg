@@ -1,0 +1,7 @@
+steps:
+  - label: Say hello
+    command: echo "hello"
+  - wait
+  - label: Write some file to disk
+    command: echo "dumb" > file.txt
+  - wait
