@@ -5,3 +5,5 @@ steps:
   - label: Write some file to disk
     command: echo "dumb" > file.txt
   - wait
+  - label: I'm gonna kill myself
+    command: echo "bye"; exit 69
