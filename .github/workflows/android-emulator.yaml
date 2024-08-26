@@ -9,6 +9,7 @@ jobs:
 
     env:
       ANDROID_HOME: /home/runner/androidsdk
+      ANDROID_SDK_ROOT: /home/runner/androidsdk
 
     steps:
       - name: Clone repository
@@ -38,6 +39,7 @@ jobs:
       - name: Set up Android SDK components
         run: |
           yes | sdkmanager --install emulator
+          echo "$ANDROID_HOME/emulator" >> $GITHUB_PATH
           yes | sdkmanager --install "system-images;android-34;google_apis;arm64-v8a"
 
       - name: Create AVD
