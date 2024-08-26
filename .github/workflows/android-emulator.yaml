@@ -22,8 +22,6 @@ jobs:
 
       - name: Set up bartekpacia/scripts
         run: |
-          echo "$HOME"
-          echo "$PWD"
           git clone https://github.com/bartekpacia/scripts.git
           echo "$PWD/scripts/bin" >> $GITHUB_PATH
 
@@ -38,16 +36,8 @@ jobs:
           
       - name: Set up Android SDK components
         run: |
-          echo $GITHUB_PATH
-          cat $GITHUB_PATH
-          echo "cmdline-tools/latest/"
-          ls -lAhF $ANDROID_HOME/cmdline-tools/
-          echo "cmdline-tools/latest/"
-          ls -lAhF $ANDROID_HOME/cmdline-tools/latest/
-          echo "cmdline-tools/latest/bin/"
-          ls -lAhF $ANDROID_HOME/cmdline-tools/latest/bin
-          sdkmanager --install 'emulator'
-          sdkmanager --install 'system-images;android-34;google_apis;arm64-v8a'
+          sdkmanager --install emulator
+          yes | sdkmanager --install 'system-images;android-34;google_apis;arm64-v8a'
 
       - name: Create AVD
         run: |
