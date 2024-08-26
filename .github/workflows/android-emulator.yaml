@@ -32,19 +32,19 @@ jobs:
           echo "$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> $GITHUB_PATH
 
           curl -fsSl -O https://raw.githubusercontent.com/travis-ci/travis-cookbooks/master/community-cookbooks/android-sdk/files/default/android-wait-for-emulator
-          echo "$PWD:" >> $GITHUB_PATH
+          chmod +x ./android-wait-for-emulator
+          echo "$PWD" >> $GITHUB_PATH
           
       - name: Set up Android SDK components
         run: |
-          sdkmanager --install emulator
-          yes | sdkmanager --install 'system-images;android-34;google_apis;arm64-v8a'
+          yes | sdkmanager --install emulator
+          yes | sdkmanager --install "system-images;android-34;google_apis;arm64-v8a"
 
       - name: Create AVD
         run: |
           avdmanager -s create avd \
-            --sdcard "8192M" \
-            --package "system-images;android-$API_LEVEL;google_apis;arm64-v8a" \
-            --name "MyAvd"
+            --package "system-images;android-34;google_apis;arm64-v8a" \
+            --name "MyAVD"
 
           cat << EOF >> ~/.android/avd/MyAVD.avd/config.ini
           hw.cpu.ncore=2
