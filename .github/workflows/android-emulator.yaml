@@ -61,9 +61,7 @@ jobs:
       - name: Run AVD
         run: |
           emulator @MyAVD \
-            -verbose -no-snapshot-save -no-window -noaudio -no-boot-anim -accel on \
-            >~/emulator_stdout.log \
-            2>~/emulator_stderr.log &
+            -verbose -no-snapshot-save -no-window -noaudio -no-boot-anim -accel on
 
       - name: Wait for emulator to start
         run: android-wait-for-emulator
