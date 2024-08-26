@@ -1,0 +1,81 @@
+name: Run Android emulator
+
+on:
+  workflow_dispatch:
+
+jobs:
+  main:
+    runs-on: ubuntu-24.04
+
+    env:
+      ANDROID_HOME: /home/runner/androidsdk
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 8
+
+      - name: Set up bartekpacia/scripts
+        run: |
+          echo "$HOME"
+          echo "$PWD"
+          git clone https://github.com/bartekpacia/scripts.git
+          echo "$PWD/scripts/bin" >> $GITHUB_PATH
+
+      - name: Set up Android Command-line Tools
+        run: |
+          # v8, latest working on Java 8
+          bash $(which install_android_sdk) https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip
+          echo "$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> $GITHUB_PATH
+
+          curl -fsSl -O https://raw.githubusercontent.com/travis-ci/travis-cookbooks/master/community-cookbooks/android-sdk/files/default/android-wait-for-emulator
+          echo "$PWD:" >> $GITHUB_PATH
+          
+      - name: Set up Android SDK components
+        run: |
+          echo $GITHUB_PATH
+          cat $GITHUB_PATH
+          echo "cmdline-tools/latest/"
+          ls -lAhF $ANDROID_HOME/cmdline-tools/
+          echo "cmdline-tools/latest/"
+          ls -lAhF $ANDROID_HOME/cmdline-tools/latest/
+          echo "cmdline-tools/latest/bin/"
+          ls -lAhF $ANDROID_HOME/cmdline-tools/latest/bin
+          sdkmanager --install 'emulator'
+          sdkmanager --install 'system-images;android-34;google_apis;arm64-v8a'
+
+      - name: Create AVD
+        run: |
+          avdmanager -s create avd \
+            --sdcard "8192M" \
+            --package "system-images;android-$API_LEVEL;google_apis;arm64-v8a" \
+            --name "MyAvd"
+
+          cat << EOF >> ~/.android/avd/MyAVD.avd/config.ini
+          hw.cpu.ncore=2
+          hw.gpu.enabled=yes
+          hw.gpu.mode=swiftshader_indirect
+          hw.ramSize=3072
+          disk.dataPartition.size=4G
+          vm.heapSize=576
+          hw.lcd.density=440
+          hw.lcd.height=2220
+          hw.lcd.width=1080
+          EOF
+      
+      - name: Run AVD
+        run: |
+          emulator @MyAVD \
+            -verbose -no-snapshot-save -no-window -noaudio -no-boot-anim -accel on \
+            >~/emulator_stdout.log \
+            2>~/emulator_stderr.log &
+
+      - name: Wait for emulator to start
+        run: android-wait-for-emulator
+
+      
