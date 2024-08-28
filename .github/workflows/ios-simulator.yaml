@@ -1,0 +1,33 @@
+name: ios simulator
+
+on:
+  workflow_dispatch:
+
+jobs:
+  main:
+    runs-on: macos-14
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: List available simulators
+        run: |
+          xcrun simctl list --json devices available | jq -r '.devices | ."com.apple.CoreSimulator.SimRuntime.iOS-17-5" | .[] | { "udid": .udid, "name": .name }'
+
+      - name: Run simulator
+        run: xcrun simctl boot iPhone\ 15
+
+      - name: Wait for simulator to start
+        run: xcrun simctl bootstatus iPhone\ 15
+
+      - name: Download Wikipedia app
+        run: |
+          mkdir -p apps
+          url="https://storage.googleapis.com/mobile.dev/samples/e2e_apps/Wikipedia.zip"
+          app_file="$(curl -fsSL --output-dir ./apps --write-out "%{filename_effective}" -OJ "$url")"
+          unzip -qq -o -d ./apps "$app_file" -x "__MACOSX/*"
+          rm "$app_file"
+
+      - name: Install Wikipedia app
+        run: xcrun simctl install booted ./apps/Wikipedia.app

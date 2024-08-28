@@ -1,4 +1,4 @@
-name: Run Android emulator
+name: android emulator
 
 on:
   workflow_dispatch:
