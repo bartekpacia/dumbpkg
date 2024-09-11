@@ -1,0 +1,37 @@
+name: ios simulator
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: |
+          mkdir -p build/Products
+          touch build/Products/maestro-driver-ios_iphonesimulator17.5-arm64-x86_64.xctestrun
+          mkdir -p build/Products/Debug-iphonesimulator
+          touch build/Products/Debug-iphonesimulator/FlyingFox.o
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build/Products
+          path: build/Products
+
+
+  bruh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build/Products
+
+      - run: ls -lhFA .
+
+      - run: ls -lhFA ./build
+
+      - run: ls -lhFA build/Products
