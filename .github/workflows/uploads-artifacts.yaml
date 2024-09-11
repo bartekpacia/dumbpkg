@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: build/Products
+          name: build__Products
           path: build/Products
 
 
@@ -29,7 +29,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build/Products
+          name: build/Probuild__Productsducts
 
       - run: ls -lhFA .
 
