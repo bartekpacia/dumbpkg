@@ -29,7 +29,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build/Probuild__Productsducts
+          name: build__Products
 
       - run: ls -lhFA .
 
