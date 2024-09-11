@@ -23,6 +23,7 @@ jobs:
 
   bruh:
     runs-on: ubuntu-latest
+    needs: main
 
     steps:
       - name: Download artifacts
