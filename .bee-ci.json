@@ -1,0 +1,9 @@
+{
+    "image": "alpine:3.20",
+    "commands": [
+        "echo \"Hello, World!!! I will sleep for 3 seconds now...\"",
+        "sleep 3",
+        "echo \"I am running on: $(uname -a)!\""
+    ],
+    "timeout": 60
+}
